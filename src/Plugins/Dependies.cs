@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Oxide.Core;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Relfost.Plugins
 {
@@ -8,6 +8,7 @@ namespace Relfost.Plugins
     {
         private Dictionary<string, bool> _dependies = new Dictionary<string, bool>();
         private string _loaded_hook_name = "OnAllDependiesLoaded";
+        public int CheckInterval { get; set; } = 500; 
         public Dependies(List<string> dependies, string loaded_hook_name = null)
         {
             if (loaded_hook_name != null) _loaded_hook_name = loaded_hook_name;
@@ -16,7 +17,6 @@ namespace Relfost.Plugins
 
         private async void Initialize(List<string> dependies)
         {
-            await Task.Delay(500); 
             FillDependies(dependies);
         }
         private void FillDependies(List<string> dependies)
@@ -43,7 +43,7 @@ namespace Relfost.Plugins
                     }
                 }
 
-                await Task.Delay(500);
+                await Task.Delay(CheckInterval);
             }
 
             CallAllDependiesLoadedHook();
