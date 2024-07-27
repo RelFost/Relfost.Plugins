@@ -3,7 +3,7 @@
 
 ## Introduction
 
-The `Dependies` class is designed to manage and verify the loading status of plugin dependencies in the Oxide framework. This class allows you to initialize a set of dependencies, periodically check their load status, and trigger a callback once all dependencies are loaded.
+The `Dependies` class is designed to manage and verify the loading status of plugin dependencies in the Oxide and Carbon. This class allows you to initialize a set of dependencies, periodically check their load status, and trigger a callback once all dependencies are loaded.
 
 ## Features
 
@@ -13,7 +13,7 @@ The `Dependies` class is designed to manage and verify the loading status of plu
 
 ## Installation
 
-1. Ensure you have the necessary environment set up with the Oxide framework.
+1. Ensure you have the necessary environment set up with the Oxide and Carbon.
 2. Add the `Dependies` class to your project in a separate file under the `Relfost.Plugins` namespace.
 
 ## Usage
@@ -51,6 +51,15 @@ public void OnAllDependiesLoaded()
 }
 ```
 
+### Step 4: Adjust the Check Interval (Optional)
+
+You can adjust the interval at which the dependencies are checked for their loading status by setting the `CheckInterval` property (in milliseconds).
+
+```csharp
+dependenciesManager.CheckInterval = 1000; // Set interval to 1 second
+```
+
+
 ### Example
 
 Here's a full example demonstrating the usage of the `Dependies` class within an Oxide plugin:
@@ -72,6 +81,10 @@ namespace Carbon.Plugins
         {
             List<string> dependencies = new List<string> { "PluginParent1", "PluginParent2" };
             Dependies dependenciesManager = new Dependies(dependencies);
+            // Start checking dependencies
+
+            // Adjusting the check interval
+            dependenciesManager.CheckInterval = 1000; // Set interval to 1 second
         }
 
         public void OnAllDependiesLoaded()
@@ -88,6 +101,3 @@ namespace Carbon.Plugins
 - The callback hook is invoked once all dependencies are loaded, allowing you to execute any initialization logic that depends on these plugins.
 - The second argument of the `Dependies` constructor is optional and defaults to "OnAllDependiesLoaded" if not provided.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
