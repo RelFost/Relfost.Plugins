@@ -14,7 +14,8 @@ The `Dependies` class is designed to manage and verify the loading status of plu
 ## Installation
 
 1. Ensure you have the necessary environment set up with the Oxide and Carbon.
-2. Add the `Dependies` class to your project in a separate file under the `Relfost.Plugins` namespace.
+2. Download the compiled `Relfost.Plugins.dll` file from the [Releases page](https://github.com/RelFost/Relfost.Plugins/releases).
+3. Place the `Relfost.Plugins.dll` file into the `carbon/extensions` directory of your project.
 
 ## Usage
 
