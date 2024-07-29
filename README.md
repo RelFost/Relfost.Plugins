@@ -3,17 +3,17 @@
 
 ## Introduction
 
-The `Dependies` class is designed to manage and verify the loading status of plugin dependencies in the Oxide and Carbon. This class allows you to initialize a set of dependencies, periodically check their load status, and trigger a callback once all dependencies are loaded.
+The `Dependies` class is designed to manage and verify the loading status of plugin dependencies in Oxide and Carbon environments. This class allows you to initialize a set of dependencies, periodically check their load status, and trigger a callback or hook once all dependencies are loaded.
 
 ## Features
 
 - Initialize dependencies and check their loading status.
 - Periodically check the loading status of each dependency.
-- Trigger a callback hook once all dependencies are loaded.
+- Trigger a callback or hook once all dependencies are loaded.
 
 ## Installation
 
-1. Ensure you have the necessary environment set up with the Oxide and Carbon.
+1. Ensure you have the necessary environment set up with Oxide and Carbon.
 2. Download the compiled `Relfost.Plugins.dll` file from the [Releases page](https://github.com/RelFost/Relfost.Plugins/releases).
 3. Place the `Relfost.Plugins.dll` file into the `carbon/extensions` directory of your project.
 
@@ -29,7 +29,7 @@ List<string> dependencies = new List<string> { "PluginParent1", "PluginParent2" 
 
 ### Step 2: Instantiate the Dependies Class
 
-Instantiate the `Dependies` class with the list of dependencies and an optional callback hook name. If the callback hook name is not provided, it defaults to "OnAllDependiesLoaded".
+Instantiate the `Dependies` class with the list of dependencies, an optional callback hook name, and an optional callback function.
 
 ```csharp
 Dependies dependenciesManager = new Dependies(dependencies);
@@ -41,14 +41,31 @@ Or with a custom callback hook name:
 Dependies dependenciesManager = new Dependies(dependencies, "CustomDependiesLoaded");
 ```
 
-### Step 3: Define the Callback Hook
+Or with a callback function:
 
-Define the callback hook that will be triggered once all dependencies are loaded. This should be a method in your plugin class.
+```csharp
+Dependies dependenciesManager = new Dependies(dependencies, callback: MyCustomCallback);
+```
+
+### Step 3: Define the Callback Hook or Function
+
+Define the callback hook or function that will be triggered once all dependencies are loaded. This should be a method in your plugin class.
+
+#### Using a Hook:
 
 ```csharp
 public void OnAllDependiesLoaded()
 {
     Puts("All dependencies are loaded!");
+}
+```
+
+#### Using a Callback Function:
+
+```csharp
+private void MyCustomCallback()
+{
+    Puts("Custom callback executed: All dependencies are loaded!");
 }
 ```
 
@@ -59,7 +76,6 @@ You can adjust the interval at which the dependencies are checked for their load
 ```csharp
 dependenciesManager.CheckInterval = 1000; // Set interval to 1 second
 ```
-
 
 ### Example
 
@@ -81,16 +97,16 @@ namespace Carbon.Plugins
         private void OnServerInitialized()
         {
             List<string> dependencies = new List<string> { "PluginParent1", "PluginParent2" };
-            Dependies dependenciesManager = new Dependies(dependencies);
+            Dependies dependenciesManager = new Dependies(dependencies, callback: MyCustomCallback);
             // Start checking dependencies
 
             // Adjusting the check interval
             dependenciesManager.CheckInterval = 1000; // Set interval to 1 second
         }
 
-        public void OnAllDependiesLoaded()
+        private void MyCustomCallback()
         {
-            Puts("All dependencies are loaded!");
+            Puts("Custom callback executed: All dependencies are loaded!");
         }
     }
 }
@@ -99,6 +115,5 @@ namespace Carbon.Plugins
 ## Notes
 
 - The `Dependies` class uses asynchronous methods (`async/await`) to periodically check the loading status of each dependency without blocking the main thread.
-- The callback hook is invoked once all dependencies are loaded, allowing you to execute any initialization logic that depends on these plugins.
+- The callback hook or function is invoked once all dependencies are loaded, allowing you to execute any initialization logic that depends on these plugins.
 - The second argument of the `Dependies` constructor is optional and defaults to "OnAllDependiesLoaded" if not provided.
-
