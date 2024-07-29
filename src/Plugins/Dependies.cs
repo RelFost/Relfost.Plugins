@@ -1,4 +1,5 @@
 using Oxide.Core;
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -8,10 +9,14 @@ namespace Relfost.Plugins
     {
         private Dictionary<string, bool> _dependies = new Dictionary<string, bool>();
         private string _loaded_hook_name = "OnAllDependiesLoaded";
-        public int CheckInterval { get; set; } = 500; 
-        public Dependies(List<string> dependies, string loaded_hook_name = null)
+        private Action _callback;
+
+        public int CheckInterval { get; set; } = 500;
+
+        public Dependies(List<string> dependies, string loaded_hook_name = null, Action callback = null)
         {
             if (loaded_hook_name != null) _loaded_hook_name = loaded_hook_name;
+            _callback = callback;
             Initialize(dependies);
         }
 
@@ -19,6 +24,7 @@ namespace Relfost.Plugins
         {
             FillDependies(dependies);
         }
+
         private void FillDependies(List<string> dependies)
         {
             foreach (string dependence in dependies)
@@ -27,6 +33,7 @@ namespace Relfost.Plugins
             }
             CheckDependiesLoaded();
         }
+
         private async void CheckDependiesLoaded()
         {
             while (!AllDependiesLoaded())
@@ -48,6 +55,7 @@ namespace Relfost.Plugins
 
             CallAllDependiesLoadedHook();
         }
+
         private bool AllDependiesLoaded()
         {
             if (_dependies.Count <= 0) return true;
@@ -55,6 +63,17 @@ namespace Relfost.Plugins
                 if (dependence.Value == false) return false;
             return true;
         }
-        private void CallAllDependiesLoadedHook() => Interface.CallHook(_loaded_hook_name);
+
+        private void CallAllDependiesLoadedHook()
+        {
+            if (_callback != null)
+            {
+                _callback();
+            }
+            else
+            {
+                Interface.CallHook(_loaded_hook_name);
+            }
+        }
     }
 }
